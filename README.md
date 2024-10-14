@@ -7,4 +7,3 @@ I will develop this package continuously.
 
 install.packages("devtools")
 devtools::install_github("hsnbulut/MVTests")
-
