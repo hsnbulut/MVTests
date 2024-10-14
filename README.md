@@ -5,5 +5,4 @@
 
 # To install the package from GitHub
 
-> install.packages("devtools")
-> devtools::install_github("hsnbulut/MVTests")
+devtools::install_github("hsnbulut/MVTests")
