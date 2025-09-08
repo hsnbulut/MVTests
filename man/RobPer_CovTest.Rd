@@ -30,13 +30,13 @@ Robust Permutation Test for Covariance Matrices in High Dimensional Data
 }
 \examples{
 
-library(rrcov)
+if (requireNamespace("rrcov", quietly=TRUE)) {
 x1<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = diag(20))
 x2<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 2*diag(20))
 x3<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 3*diag(20))
 data<-rbind(x1,x2,x3)
 group_label<-c(rep(1,10),rep(2,10),rep(3,10))
-RobPer_CovTest(x=data, group=group_label)
+RobPer_CovTest(x=data, group=group_label)}
 }
 \references{
 Bulut, H (2024). A robust permutational test to compare covariance matrices in high dimensional data. (Unpublished)

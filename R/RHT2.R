@@ -7,7 +7,6 @@
 #' This function needs the q and d values. These values can be obtained \code{simRHT2} function.  
 #' For more detailed information, you can see the study by Bulut (2021).
 #' 
-#' @importFrom rrcov CovMrcd
 #' @param data the data. It must be matrix or data.frame.
 #' @param mu0 the mean vector which will be used to test the null hypothesis.
 #' @param alpha numeric parameter controlling the size of the subsets over which the determinant is minimized. 
@@ -26,13 +25,16 @@
 #' @author Hasan BULUT <hasan.bulut@omu.edu.tr>
 #' @examples
 #' 
-#' library(rrcov)
-#' data(octane)
-#' mu.clean<-colMeans(octane[-c(25,26,36,37,38,39),])
-#' 
-#' RHT2(data=octane,mu0=mu.clean,alpha=0.84,d=1396.59,q=1132.99)
+#' if (requireNamespace("rrcov", quietly = TRUE)) {
+#' utils::data("octane", package = "rrcov")
+#' mu.clean <- colMeans(octane[-c(25,26,36,37,38,39), ])
+#' RHT2(data = octane, mu0 = mu.clean, alpha = 0.84, d = 1396.59, q = 1132.99)}
+
 
 RHT2<-function(data,mu0,alpha=0.75,d,q){
+  if (!requireNamespace("rrcov", quietly=TRUE))
+    stop("Package 'rrcov' is required for RHT2 (CovMrcd). Please install it.", call.=FALSE)
+  
   data<-as.matrix(data)
   n<-nrow(data); p<-ncol(data)
   mu0<-as.matrix(mu0)

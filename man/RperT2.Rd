@@ -29,10 +29,10 @@ Robust Permutation Hotelling T^2 Test for Two Independent Samples in high Dimens
 }
 \examples{
 
-library(rrcov)
+if (requireNamespace("rrcov", quietly=TRUE)) {
 x<-mvtnorm::rmvnorm(n=10,sigma=diag(20),mean=rep(0,20))
 y<-mvtnorm::rmvnorm(n=10,sigma=diag(20),mean=rep(1,20))
-RperT2(X1=x,X2=y)$p.value
+RperT2(X1=x,X2=y)$p.value}
 }
 \references{
 Bulut et al. (2024). A Robust High-Dimensional Test for Two-Sample Comparisons, Axioms.

@@ -8,7 +8,6 @@
 #' This function computes p value based on robust CAT algorithm to compare two means vectors 
 #' under multivariate Behrens-Fisher problem. When p value<0.05, it means the difference of two mean vectors is significant statistically.
 #' 
-#' @importFrom robustbase covMcd
 #' @param X a matrix or data frame for first group.
 #' @param Y a matrix or data frame for second group.
 #' @param M iteration number and the default is 1000.
@@ -21,9 +20,13 @@
 #' @examples
 #' 
 #' data(iris)
-#' RobCat(X=iris[1:20,-5],Y=iris[81:100,-5])
+#' if (requireNamespace("robustbase", quietly=TRUE)) {
+#' RobCat(X=iris[1:20,-5],Y=iris[81:100,-5])}
 
 RobCat<-function(X,Y,M=1000,alpha=0.75) {
+  if (!requireNamespace("robustbase", quietly=TRUE))
+    stop("Package 'robustbase' is required for RobCat (covMcd). Please install it.", call.=FALSE)
+  
   
   result1<-robustbase::covMcd(X,alpha=alpha)
   result2<-robustbase::covMcd(Y,alpha=alpha)

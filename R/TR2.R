@@ -5,10 +5,7 @@
 #' @details
 #' \code{TR2} function calculates the robust Hotelling T^2 test statistic for two independent samples in high dimensional data based on the minimum regularized covariance determinant estimators.
 #' 
-#' 
-#' @importFrom rrcov CovMrcd
 #' @importFrom  mvtnorm rmvnorm
-#' @importFrom robustbase covMcd
 #' @importFrom stats cor cov pchisq pf pnorm qchisq qf var
 #' @param x1 the data matrix for the first group. It must be matrix or data.frame.
 #' @param x2 the data matrix for the first group. It must be matrix or data.frame.
@@ -23,12 +20,16 @@
 #' @author Hasan BULUT <hasan.bulut@omu.edu.tr>
 #' @examples
 #' 
-#' library(rrcov)
+#' if (requireNamespace("rrcov", quietly=TRUE)) {
 #' x<-mvtnorm::rmvnorm(n=10,sigma=diag(20),mean=rep(0,20))
 #' y<-mvtnorm::rmvnorm(n=10,sigma=diag(20),mean=rep(1,20))
-#' TR2(x1=x,x2=y)
+#' TR2(x1=x,x2=y)}
 
 TR2<-function(x1,x2,alpha=0.75){
+  if (!requireNamespace("rrcov", quietly=TRUE))
+    stop("Package 'rrcov' is required for TR2 (CovMrcd). Please install it.", call.=FALSE)
+  
+  
   x1<-as.matrix(x1)   ;  x2<-as.matrix(x2)
   n1<-nrow(x1); n2<-nrow(x2); n<-n1+n2 ;  p<-ncol(x1) 
   

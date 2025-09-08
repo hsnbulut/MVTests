@@ -4,7 +4,7 @@
 \alias{simRHT2}
 \title{Monte Carlo Simulation to obtain d and q constants for RHT2 function}
 \usage{
-simRHT2(n, p, nrep = 500)
+simRHT2(n, p, nrep = 500, alpha = 0.75)
 }
 \arguments{
 \item{n}{the sample size}
@@ -12,6 +12,9 @@ simRHT2(n, p, nrep = 500)
 \item{p}{the number of variables}
 
 \item{nrep}{the number of iteration. The default value is 500.}
+
+\item{alpha}{numeric parameter controlling the size of the subsets over which the determinant is minimized. 
+Allowed values are between 0.5 and 1 and the default is 0.75.}
 }
 \value{
 a list with 2 elements:

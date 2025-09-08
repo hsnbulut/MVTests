@@ -26,10 +26,10 @@ Robust Hotelling T^2 Test Statistic for Two Independent Samples in high Dimensio
 }
 \examples{
 
-library(rrcov)
+if (requireNamespace("rrcov", quietly=TRUE)) {
 x<-mvtnorm::rmvnorm(n=10,sigma=diag(20),mean=rep(0,20))
 y<-mvtnorm::rmvnorm(n=10,sigma=diag(20),mean=rep(1,20))
-TR2(x1=x,x2=y)
+TR2(x1=x,x2=y)}
 }
 \references{
 Bulut et al. (2024). A Robust High-Dimensional Test for Two-Sample Comparisons, Axioms

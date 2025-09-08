@@ -6,7 +6,6 @@
 #' \code{RobPer_CovTest} function calculates directly p-value based on the calculated value of test statistics and the permutational distribution of test statistics for covariance matrices of two or more independent samples in high dimensional data based on the minimum regularized covariance determinant estimators.
 #' 
 #' 
-#' @importFrom rrcov CovMrcd
 #' @importFrom  mvtnorm rmvnorm
 #' @param x the data matrix
 #' @param group the grouping vector. It must be factor.
@@ -24,15 +23,18 @@
 #' @author Hasan BULUT <hasan.bulut@omu.edu.tr>
 #' @examples
 #' 
-#' library(rrcov)
+#' if (requireNamespace("rrcov", quietly=TRUE)) {
 #' x1<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = diag(20))
 #' x2<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 2*diag(20))
 #' x3<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 3*diag(20))
 #' data<-rbind(x1,x2,x3)
 #' group_label<-c(rep(1,10),rep(2,10),rep(3,10))
-#' RobPer_CovTest(x=data, group=group_label)
+#' RobPer_CovTest(x=data, group=group_label)}
 
 RobPer_CovTest<-function(x, group,N=100,alpha=0.75){
+  if (!requireNamespace("rrcov", quietly=TRUE))
+    stop("Package 'rrcov' is required for Rob_CovTest (CovMrcd). Please install it.", call.=FALSE)
+  
   nh<-table(group) ; n<-sum(nh)
   k<-length(nh)
   

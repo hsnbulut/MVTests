@@ -6,7 +6,6 @@
 #' \code{Rob_CovTest} function computes the calculated value of the test statistic for covariance matrices of two or more independent samples in high dimensional data based on the minimum regularized covariance determinant estimators.
 #' 
 #' 
-#' @importFrom rrcov CovMrcd
 #' @importFrom  mvtnorm rmvnorm
 #' @param x the data matrix
 #' @param group the grouping vector. It must be factor.
@@ -21,15 +20,18 @@
 #' @author Hasan BULUT <hasan.bulut@omu.edu.tr>
 #' @examples
 #' 
-#' library(rrcov)
+#' if (requireNamespace("rrcov", quietly=TRUE)) {
 #' x1<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = diag(20))
 #' x2<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 2*diag(20))
 #' x3<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 3*diag(20))
 #' data<-rbind(x1,x2,x3)
 #' group_label<-c(rep(1,10),rep(2,10),rep(3,10))
-#' Rob_CovTest(x=data, group=group_label)
+#' Rob_CovTest(x=data, group=group_label)}
 
 Rob_CovTest<- function(x, group,alpha=0.75) {
+  if (!requireNamespace("rrcov", quietly=TRUE))
+    stop("Package 'rrcov' is required for Rob_CovTest (CovMrcd). Please install it.", call.=FALSE)
+  
   n <- nrow(x)
   p <- ncol(x)
   nk <- table(group)

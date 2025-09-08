@@ -31,7 +31,8 @@ under multivariate Behrens-Fisher problem. When p value<0.05, it means the diffe
 \examples{
 
 data(iris)
-RobCat(X=iris[1:20,-5],Y=iris[81:100,-5])
+if (requireNamespace("robustbase", quietly=TRUE)) {
+RobCat(X=iris[1:20,-5],Y=iris[81:100,-5])}
 }
 \author{
 Hasan BULUT <hasan.bulut@omu.edu.tr>

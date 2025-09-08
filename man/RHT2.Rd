@@ -34,11 +34,10 @@ For more detailed information, you can see the study by Bulut (2021).
 }
 \examples{
 
-library(rrcov)
-data(octane)
-mu.clean<-colMeans(octane[-c(25,26,36,37,38,39),])
-
-RHT2(data=octane,mu0=mu.clean,alpha=0.84,d=1396.59,q=1132.99)
+if (requireNamespace("rrcov", quietly = TRUE)) {
+utils::data("octane", package = "rrcov")
+mu.clean <- colMeans(octane[-c(25,26,36,37,38,39), ])
+RHT2(data = octane, mu0 = mu.clean, alpha = 0.84, d = 1396.59, q = 1132.99)}
 }
 \references{
 Bulut, H (2021). A robust Hotelling test statistic for one sample case in high dimensional data,

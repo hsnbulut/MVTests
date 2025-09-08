@@ -31,7 +31,7 @@ Pair-Wise comparison of covariance matrices between hth and gth sample
 }
 \examples{
 
-library(rrcov)
+if (requireNamespace("rrcov", quietly=TRUE)) {
 x1<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = diag(20))
 x2<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 2*diag(20))
 x3<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 3*diag(20))
@@ -46,7 +46,7 @@ Si.matrices<-lapply(1:g, function(i) rrcov::CovMrcd(data[(group_label==Levels[i]
 alpha=0.9)@cov)
 Spool <- Reduce("+", Map("*", nk, Si.matrices)) / n
 #for the first and second groups
-Mhg(Sh = Si.matrices[[1]], Sg = Si.matrices[[2]],S = Spool, nh = nk[1], ng = nk[2], n = n)
+Mhg(Sh = Si.matrices[[1]], Sg = Si.matrices[[2]],S = Spool, nh = nk[1], ng = nk[2], n = n)}
 }
 \references{
 Bulut, H (2024). A robust permutational test to compare covariance matrices in high dimensional data. (Unpublished)

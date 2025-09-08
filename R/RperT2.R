@@ -6,9 +6,7 @@
 #' \code{RperT2} function performs a robust permutation Hotelling T^2 test for two independent samples in high dimensional test based on the minimum regularized covariance determinant estimators.
 #' 
 #' 
-#' @importFrom rrcov CovMrcd
 #' @importFrom  mvtnorm rmvnorm
-#' @importFrom robustbase covMcd
 #' @importFrom stats cor cov pchisq pf pnorm qchisq qf var
 #' @param X1 the data matrix for the first group. It must be matrix or data.frame.
 #' @param X2 the data matrix for the first group. It must be matrix or data.frame.
@@ -25,12 +23,15 @@
 #' @author Hasan BULUT <hasan.bulut@omu.edu.tr>
 #' @examples
 #' 
-#' library(rrcov)
+#' if (requireNamespace("rrcov", quietly=TRUE)) {
 #' x<-mvtnorm::rmvnorm(n=10,sigma=diag(20),mean=rep(0,20))
 #' y<-mvtnorm::rmvnorm(n=10,sigma=diag(20),mean=rep(1,20))
-#' RperT2(X1=x,X2=y)$p.value
+#' RperT2(X1=x,X2=y)$p.value}
 
 RperT2<-function(X1,X2,alpha=0.75,N=100){
+  if (!requireNamespace("rrcov", quietly=TRUE))
+    stop("Package 'rrcov' is required for RperT2 (CovMrcd). Please install it.", call.=FALSE)
+  
   X1<-as.matrix(X1)   ;  X2<-as.matrix(X2)
   n1<-nrow(X1); n2<-nrow(X2); n<-n1+n2 ;  p<-ncol(X1) 
   data<-rbind(X1,X2)

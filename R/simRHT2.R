@@ -9,11 +9,12 @@
 #' These constants are used in \code{RHT2} function.
 #' For more detailed information, you can see the study by Bulut (2021).
 #' 
-#' @importFrom rrcov CovControlMrcd CovMrcd
 #' @importFrom mvtnorm rmvnorm
 #' @param n the sample size
 #' @param p the number of variables
 #' @param nrep the number of iteration. The default value is 500.
+#' @param alpha numeric parameter controlling the size of the subsets over which the determinant is minimized. 
+#'              Allowed values are between 0.5 and 1 and the default is 0.75.  
 #' 
 #' @export
 #'
@@ -24,13 +25,13 @@
 #' Communication in Statistics: Theory and Methods.
 #' @author Hasan BULUT <hasan.bulut@omu.edu.tr>
 
-
-
-
-simRHT2<-function(n,p,nrep=500){
+simRHT2<-function(n,p,nrep=500,alpha=0.75){
+  if (!requireNamespace("rrcov", quietly=TRUE))
+    stop("Package 'rrcov' is required for simRHT2 (CovMrcd). Please install it.", call.=FALSE)
+  
   mu<-rep(0,p)
   sigma<-diag(p)
-  control1<-CovControlMrcd(maxcsteps=100)  
+  control1 <- rrcov::CovControlMrcd(alpha=alpha)
   
   robHT2<-function(mu,sigma,n){
     return(n*t(mu)%*%solve(sigma)%*%mu)
@@ -38,8 +39,8 @@ simRHT2<-function(n,p,nrep=500){
   
   T2r<-rep(0,nrep)
   for (i in 1:nrep){
-    data<-rmvnorm(n,mean = mu,sigma = sigma) 
-    mrcd<-CovMrcd(x=data,control=control1)
+    data<-mvtnorm::rmvnorm(n,mean = mu,sigma = sigma) 
+    mrcd<-rrcov::CovMrcd(x=data,control=control1)
     T2r[i]<-robHT2(mu = as.matrix(mrcd@center),
                    sigma = as.matrix(mrcd@cov),
                    n=n)
