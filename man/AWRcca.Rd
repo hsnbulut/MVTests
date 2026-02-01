@@ -4,20 +4,7 @@
 \alias{AWRcca}
 \title{Adaptive Wrapped Robust Canonical Correlation Analysis (AWRcca)}
 \usage{
-AWRcca(
-  X,
-  Y,
-  b = 1.5,
-  c = 4,
-  m_scores = 5,
-  alpha = 0.975,
-  eps_psd = 1e-10,
-  center_fun = stats::median,
-  scale_fun = function(x) stats::mad(x, constant = 1.4826),
-  seed = NULL,
-  xi_mc_n = 2e+05,
-  return_all = FALSE
-)
+AWRcca(X, Y, b = 1.5, c = 4, alpha = 0.975, n_xi = 10000, lambda_cap = 0.5)
 }
 \arguments{
 \item{X}{A numeric matrix of dimension \eqn{n \times p}.}
@@ -28,97 +15,50 @@ AWRcca(
 
 \item{c}{Upper wrapping threshold. Default is 4.}
 
-\item{m_scores}{Number of canonical pairs used for reweighting in score space.
-Default is 5; internally truncated to \code{min(5, rank)}.}
-
 \item{alpha}{Reweighting cutoff probability for chi-square threshold. Default is 0.975.}
 
-\item{eps_psd}{Numerical tolerance for PSD checks. Default is 1e-10.}
+\item{n_xi}{Monte Carlo sample size for the consistency correction. Default is 10000.}
 
-\item{center_fun}{Robust centering function. Default is \code{stats::median}.}
-
-\item{scale_fun}{Robust scale function. Default is MAD with consistency factor:
-\code{stats::mad(x, constant = 1.4826)}.}
-
-\item{seed}{Optional integer seed for the Monte Carlo approximation used in the
-consistency correction factor \eqn{\xi}. Default is \code{NULL}.}
-
-\item{xi_mc_n}{Monte Carlo size for computing \eqn{\xi}. Default is 200000.
-Increase for more precision.}
-
-\item{return_all}{Logical; if TRUE, returns additional intermediate matrices (may be large).
-Default is FALSE.}
+\item{lambda_cap}{Upper bound for the shrinkage intensity. Default is 0.5.}
 }
 \value{
-A list with class \code{"AWRcca"} containing:
+A list with components:
 \itemize{
-\item \code{rho}: estimated canonical correlations.
-\item \code{A}: canonical vectors for \code{X}.
-\item \code{B}: canonical vectors for \code{Y}.
-\item \code{weights}: 0/1 weights from the reweighting step.
-\item \code{lambda}: shrinkage intensity used in the final estimation.
-\item \code{lambda_init}: shrinkage intensity used in the initial estimation.
-\item \code{xi}: consistency correction factor.
-\item \code{b}, \code{c}, \code{alpha}, \code{m_scores}: used tuning parameters.
-\item \code{n}, \code{p}, \code{q}: dimensions.
-\item \code{runtime}: named vector with timing information (seconds).
-\item \code{call}: matched call.
+  \item \code{cor}: vector of canonical correlations.
+  \item \code{shrink_used}: shrinkage intensity used in the correlation regularization.
+  \item \code{weights}: 0/1 weights from MCD-based reweighting in score space.
+  \item \code{u1}: first canonical score for \code{X} (initial solution).
+  \item \code{v1}: first canonical score for \code{Y} (initial solution).
 }
-If \code{return_all = TRUE}, includes \code{R_init}, \code{R_final} and transformed data matrices.
 }
 \description{
-Implements the proposed Adaptive Wrapped Robust Canonical Correlation Analysis (AWRcca)
-for high-dimensional data possibly contaminated by both cellwise and casewise outliers.
-The method combines (i) columnwise robust standardization, (ii) wrapping transformation
-for cellwise robustness, (iii) Fisher-consistency correction under normality,
-(iv) PSD guarantee via nearest correlation matrix projection, (v) analytical Ledoit–Wolf
-shrinkage regularization, and (vi) a reweighting step based on robust distances in the
-canonical score space to downweight structural casewise outliers.
+Implements an adaptive wrapped robust canonical correlation analysis procedure for
+potentially contaminated high-dimensional data. The method applies columnwise robust
+standardization and wrapping to mitigate cellwise outliers, uses a Fisher-consistency
+correction, enforces positive semi-definiteness of the correlation matrix, applies
+Ledoit--Wolf type shrinkage, and performs an MCD-based reweighting in the canonical
+score space to downweight casewise outliers.
 }
 \details{
-**Overview**
+The wrapping transformation is based on a smooth redescending function
+\eqn{\psi_{b,c}} applied to robust z-scores (median/MAD). The shrinkage intensity is
+estimated in a Ledoit--Wolf spirit and then capped by \code{lambda_cap} to avoid
+overshrinkage.
 
-1) **Robust standardization**: each column is centered by \code{median} and scaled by MAD.
-
-2) **Wrapping**: robust z-scores are mapped by \eqn{\psi_{b,c}} (Raymaekers & Rousseeuw, 2021):
-\deqn{
-\psi_{b,c}(z) =
-\begin{cases}
-z, & |z| \le b, \\
-q_1 \tanh(q_2 (c-|z|)) \,\mathrm{sign}(z), & b < |z| < c, \\
-0, & |z| \ge c,
-\end{cases}
-}
-where \eqn{q_1 = b} and \eqn{q_2 = \tanh^{-1}(1)/ (c-b)} (a smooth choice ensuring continuity).
-
-3) **Consistency correction**: a factor \eqn{\xi} is computed such that
-\eqn{\mathrm{Var}(\xi \psi_{b,c}(Z)) = 1} for \eqn{Z \sim N(0,1)}.
-Here \eqn{\xi = 1/\sqrt{\mathbb{E}[\psi_{b,c}(Z)^2]}} is estimated by Monte Carlo.
-
-4) **Correlation & PSD**: a correlation matrix is formed from the transformed data.
-If it is not PSD, it is projected via \code{Matrix::nearPD(..., corr = TRUE)}.
-
-5) **Ledoit–Wolf shrinkage**: a data-driven shrinkage intensity \eqn{\lambda \in [0,1]}
-is estimated for the (correlation) matrix with identity target and applied as
-\eqn{R_\text{reg} = (1-\lambda)R + \lambda I}.
-
-6) **CCA by SVD**: canonical correlations are obtained from the whitened cross-correlation block.
-
-7) **Reweighting**: canonical scores are formed and robust distances are computed in the
-concatenated score space using \code{robustbase::covMcd}. Observations with distances exceeding
-the \eqn{\chi^2} cutoff are downweighted (0/1 weights).
-
-8) **Final estimation**: a weighted correlation matrix is computed and steps 4–6 are repeated.
+The function returns (i) canonical correlations, (ii) the shrinkage intensity used,
+(iii) 0/1 reweighting indicators, and (iv) the first canonical score pair computed from
+the initial solution (useful for diagnostic plots).
 }
 \examples{
-\dontrun{
-# Example with random matrices
-set.seed(1)
-X <- matrix(rnorm(40*120), 40, 120)
-Y <- matrix(rnorm(40*21),  40, 21)
+# Example: correlated blocks via a shared latent factor
+set.seed(123)
+n <- 50; p <- 30; q <- 20
+u <- rnorm(n)
+ax <- rnorm(p); ax <- ax / sqrt(sum(ax^2))
+by <- rnorm(q); by <- by / sqrt(sum(by^2))
+X <- 1.0 * u \%*\% t(ax) + matrix(rnorm(n*p), n, p)
+Y <- 1.0 * u \%*\% t(by) + matrix(rnorm(n*q), n, q)
 fit <- AWRcca(X, Y)
-fit
-summary(fit)
-}
+fit$cor[1]
 
 }

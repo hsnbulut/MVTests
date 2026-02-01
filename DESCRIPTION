@@ -2,7 +2,7 @@ Package: MVTests
 Type: Package
 Date: 2025-09-08
 Title: Multivariate Hypothesis Tests
-Version: 2.3.1
+Version: 2.3.2
 Authors@R: person(given="Hasan", family="Bulut", email="hasan.bulut@omu.edu.tr", role=c("aut","cre"))
 Author: Hasan Bulut [aut, cre]
 Maintainer: Hasan Bulut <hasan.bulut@omu.edu.tr>
@@ -12,7 +12,8 @@ Depends: R (>= 4.0)
 Imports:
     stats,
     mvtnorm,
-    Matrix
+    Matrix,
+    MASS
 Suggests:
     robustbase,
     rrcov
