@@ -5,4 +5,10 @@
 
 # To install the package from GitHub
 
+## Install devtools if needed
+install.packages("devtools")
+
+## Install MVTests from GitHub
 devtools::install_github("hsnbulut/MVTests")
+library(MVTests)
+
