@@ -25,6 +25,9 @@
 #'        Increase for more precision.
 #' @param return_all Logical; if TRUE, returns additional intermediate matrices (may be large).
 #'        Default is FALSE.
+#'        
+#'       
+#' @importFrom Matrix nearPD
 #'
 #' @details
 #' **Overview**
@@ -244,7 +247,7 @@ print.summary.AWRcca <- function(x, ...) {
 # Internal helpers
 # =============================================================================
 
-#' Wrapping function psi_{b,c}
+#' Wrapping function \eqn{\psi_{b,c}}
 #' @keywords internal
 .awrcca_psi <- function(z, b, c) {
   az <- abs(z)

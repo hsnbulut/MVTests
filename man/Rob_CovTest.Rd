@@ -27,11 +27,11 @@ Robust Test for Covariance Matrices in High Dimensional Data
 \examples{
 
 if (requireNamespace("rrcov", quietly=TRUE)) {
-x1<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = diag(20))
-x2<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 2*diag(20))
-x3<-mvtnorm::rmvnorm(n = 10,mean = rep(0,20),sigma = 3*diag(20))
+x1<-mvtnorm::rmvnorm(n = 8,mean = rep(0,10),sigma = diag(10))
+x2<-mvtnorm::rmvnorm(n = 8,mean = rep(0,10),sigma = 2*diag(10))
+x3<-mvtnorm::rmvnorm(n = 8,mean = rep(0,10),sigma = 3*diag(10))
 data<-rbind(x1,x2,x3)
-group_label<-c(rep(1,10),rep(2,10),rep(3,10))
+group_label<-c(rep(1,8),rep(2,8),rep(3,8))
 Rob_CovTest(x=data, group=group_label)}
 }
 \references{
