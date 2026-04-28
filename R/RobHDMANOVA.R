@@ -172,7 +172,7 @@ RobHDMANOVA <- function(x, group, N = 100, alpha = 0.75, tau = 0.975,
     }
   }
   
-  pval <- sum(perm_stats >= TR_obs) / N
+  pval <- (sum(perm_stats >= TR_obs) + 1) / (N + 1)
   
   results <- list(
     Lambda = observed$Lambda,
@@ -275,9 +275,10 @@ RobHDMANOVA <- function(x, group, N = 100, alpha = 0.75, tau = 0.975,
     BR <- BR + sum(weights[[k]]) * (diff_b %*% t(diff_b))
   }
   
-  TR_mat <- WR + BR
+  WR_ssp <- max(total_weight - g, 1) * WR
+  TR_mat <- WR_ssp + BR
   
-  logdet_WR <- as.numeric(determinant(WR, logarithm = TRUE)$modulus)
+  logdet_WR <- as.numeric(determinant(WR_ssp, logarithm = TRUE)$modulus)
   logdet_TR <- as.numeric(determinant(TR_mat, logarithm = TRUE)$modulus)
   
   Lambda <- exp(logdet_WR - logdet_TR)
