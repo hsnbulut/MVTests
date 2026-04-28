@@ -39,7 +39,11 @@
 #' @param tau Cutoff probability used in the robust distance-based reweighting
 #' step. The default is \code{tau = 0.975}.
 #' @param cutoff The cutoff rule for robust distances. Options are
-#' \code{"normal"} and \code{"chisq"}. The default is \code{"normal"}.
+#' \code{"normal"} and \code{"chisq"}. If \code{cutoff = "normal"}, the cutoff is
+#' computed from the median and MAD of the robust distances. If
+#' \code{cutoff = "chisq"}, the cutoff is computed as
+#' \eqn{\sqrt{\chi^2_{p,\tau}}}. The default is \code{"normal"}, which is the
+#' recommended option for the proposed method.
 #' @param seed An optional integer used to set the random seed for the permutation
 #' procedure. The default is \code{NULL}.
 #' @param verbose Logical. If \code{TRUE}, progress information is printed during
