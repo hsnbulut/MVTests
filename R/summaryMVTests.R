@@ -136,6 +136,20 @@ cat("\n\n")
 
 }
 
+  
+  ####### Weighted MRCD-Based Robust MANOVA Test
+  if (object$Test == "RobHDMANOVA") {
+    
+    cat("       Weighted MRCD-Based Robust MANOVA Test","\n\n")
+    cat("Robust Wilks' Lambda =", object$Lambda, "\n")
+    cat("Test Statistic (-log Lambda) =", object$TR, "\n")
+    cat("p-value:", format.pval(object$p.value, digits = 3), "\n\n")
+    cat("Number of permutations =", length(object$Permutations_TR), "\n")
+    cat("MRCD alpha =", object$alpha, "\n")
+    cat("Tau =", object$tau, "\n")
+    cat("Cutoff rule =", object$cutoff, "\n\n")
+    
+  }
 
 
 }  # Finish summary Function
