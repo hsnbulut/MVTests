@@ -13,7 +13,7 @@ devtools::install_github("hsnbulut/MVTests")
 library(MVTests)
 
 
-## Weighted MRCD-Based Robust MANOVA Test
+## Robust High-Dimensional MANOVA Test
 
 The `RobHDMANOVA()` function performs a weighted MRCD-based robust MANOVA test for high-dimensional data.
 
