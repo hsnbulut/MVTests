@@ -2,7 +2,7 @@
 #'
 #' @description
 #' \code{summary.MVTests} function summarizes of results of functions in this
-#'  package.
+#' package.
 #'
 #' @details
 #' This function prints a summary of the results of multivariate hypothesis 
@@ -19,128 +19,139 @@
 #' 
 #' # One Sample Hotelling T Square Test
 #' data(iris)
-#' X<-iris[1:50,1:4]
-#' mean0<-c(6,3,1,0.25)
-#' result.onesample <- OneSampleHT2(data=X,mu0=mean0,alpha=0.05)
+#' X <- iris[1:50, 1:4]
+#' mean0 <- c(6, 3, 1, 0.25)
+#' result.onesample <- OneSampleHT2(data = X, mu0 = mean0, alpha = 0.05)
 #' summary(result.onesample)
 #' 
-#' #Two Independent Sample Hotelling T Square Test
+#' # Two Independent Sample Hotelling T Square Test
 #' data(iris)
-#' G<-c(rep(1,50),rep(2,50))
-#' result.twosamples <- TwoSamplesHT2(data=iris[1:100,1:4],group=G,alpha=0.05)
+#' G <- c(rep(1, 50), rep(2, 50))
+#' result.twosamples <- TwoSamplesHT2(data = iris[1:100, 1:4],
+#'                                    group = G, alpha = 0.05)
 #' summary(result.twosamples)
 #'
-#' #Box's M Test
+#' # Box's M Test
 #' data(iris)
-#' result.BoxM <- BoxM(data=iris[,1:4],group=iris[,5])
+#' result.BoxM <- BoxM(data = iris[, 1:4], group = iris[, 5])
 #' summary(result.BoxM)
 #' 
-#' #Barlett's Test of Sphericity
+#' # Bartlett's Test of Sphericity
 #' data(iris)
-#' result.Bsper <- Bsper(data=iris[,1:4])
+#' result.Bsper <- Bsper(data = iris[, 1:4])
 #' summary(result.Bsper)
 #'
-#' #Bartlett's Test for One Sample Covariance Matrix
+#' # Bartlett's Test for One Sample Covariance Matrix
 #' data(iris) 
-#' S<-matrix(c(5.71,-0.8,-0.6,-0.5,-0.8,4.09,-0.74,-0.54,-0.6,-0.74,
-#'           7.38,-0.18,-0.5,-0.54,-0.18,8.33),ncol=4,nrow=4)
-#' result.bcov<- Bcov(data=iris[,1:4],Sigma=S)
+#' S <- matrix(c(5.71, -0.8, -0.6, -0.5,
+#'               -0.8, 4.09, -0.74, -0.54,
+#'               -0.6, -0.74, 7.38, -0.18,
+#'               -0.5, -0.54, -0.18, 8.33),
+#'             ncol = 4, nrow = 4)
+#' result.bcov <- Bcov(data = iris[, 1:4], Sigma = S)
 #' summary(result.bcov)
 
-
-summary.MVTests<-function(object,...){
- 
-if (!inherits(object,"MVTests"))
-	stop("Object must be of class 'MVTests'")
-
-###### One Sample Hotelling T Square Test
-if (object$Test=="OneSampleHT2") {  
-
-cat("       One Sample Hotelling T Square Test","\n\n")
-cat("Hotelling T Sqaure Statistic =",object$HT2,"\n",
-"F value =",round(object$F,3),
-", df1 =",object$df[1],", df2 =",object$df[2],", p-value:",format.pval(object$p.value,digits = 3),"\n\n")
-
-cat("   	              Descriptive Statistics\n\n")
-print(object$Descriptive)
-cat("\n\n")
-cat("  	            Detection important variable(s)\n\n")
-print(object$CI)
-}
-
-####### Two Independent Samples Hotelling T Square Test
-if (object$Test=="TwoSamplesHT2") {  
-
-cat("              Two Independent Samples Hotelling T Square Test","\n\n")
-cat("Hotelling T Sqaure Statistic =",object$HT2,"\n",
-"F value =",round(object$F,3),
-", df1 =",object$df[1],", df2 =",object$df[2],", p-value:",format.pval(object$p.value,digits = 3),"\n\n")
-
-cat("   	       Descriptive Statistics (The First Group) \n\n")
-print(object$Descriptive1)
-cat("\n\n")
-
-cat("   	       Descriptive Statistics (The Second Group) \n\n")
-print(object$Descriptive2)
-cat("\n\n")
-
-cat("  	       Detection important variable(s)\n\n")
-print(object$CI)
-}
-
-####### Box-M Test
-if (object$Test=="BoxM") {  
-
-cat("       Box's M Test","\n\n")
-cat("Chi-Squared Value =",object$Chisq,", df =",object$df," and p-value:",format.pval(object$p.value,digits = 3),"\n\n")
-}
-
-####### Bartlett's Sphericity Test
-if (object$Test=="Bsper") {  
-
-cat("       Bartlett's Sphericity Test","\n\n")
-cat("Chi-Squared Value =",object$Chisq,", df =",object$df," and p-value:",format.pval(object$p.value,digits = 3),"\n\n")
-cat("       Correlation Matrix","\n\n")
-print(object$R)
-
-}
-
-
-
-## Bartlett's Test for one covariance matrices 
-if (object$Test=="Bcov") {  
-
-cat("       Bartlett's Test for One Sample Covariance Matrix","\n\n")
-cat("Chi-Squared Value =",object$Chisq,", df =",object$df," and p-value:",format.pval(object$p.value,digits = 3),"\n\n")
-}
-
-## Multivariate Paired Test 
-if (object$Test=="Mpaired") {  
-
-cat("       Multivariate Paired Hotelling T Square Test","\n\n")
-cat("Hotelling T Sqaure Statistic =",object$HT2,"\n",
-"F value =",round(object$F,3),
-", df1 =",object$df[1],", df2 =",object$df[2],", p-value:",format.pval(object$p.value,digits = 3),"\n\n")
-
-cat("   	       Descriptive Statistics (The First Treatment) \n\n")
-print(object$Descriptive1)
-cat("\n\n")
-
-cat("   	       Descriptive Statistics (The Second Treatment) \n\n")
-print(object$Descriptive2)
-cat("\n\n")
-
-cat("   	       Descriptive Statistics (The Differences) \n\n")
-print(object$Descriptive.Difference)
-cat("\n\n")
-
-}
-
+summary.MVTests <- function(object, ...) {
+  
+  if (!inherits(object, "MVTests")) {
+    stop("Object must be of class 'MVTests'")
+  }
+  
+  ###### One Sample Hotelling T Square Test
+  if (!is.null(object$Test) && object$Test == "OneSampleHT2") {  
+    
+    cat("       One Sample Hotelling T Square Test", "\n\n")
+    cat("Hotelling T Sqaure Statistic =", object$HT2, "\n",
+        "F value =", round(object$F, 3),
+        ", df1 =", object$df[1],
+        ", df2 =", object$df[2],
+        ", p-value:", format.pval(object$p.value, digits = 3), "\n\n")
+    
+    cat("   	              Descriptive Statistics\n\n")
+    print(object$Descriptive)
+    cat("\n\n")
+    cat("  	            Detection important variable(s)\n\n")
+    print(object$CI)
+  }
+  
+  ####### Two Independent Samples Hotelling T Square Test
+  if (!is.null(object$Test) && object$Test == "TwoSamplesHT2") {  
+    
+    cat("              Two Independent Samples Hotelling T Square Test", "\n\n")
+    cat("Hotelling T Sqaure Statistic =", object$HT2, "\n",
+        "F value =", round(object$F, 3),
+        ", df1 =", object$df[1],
+        ", df2 =", object$df[2],
+        ", p-value:", format.pval(object$p.value, digits = 3), "\n\n")
+    
+    cat("   	       Descriptive Statistics (The First Group) \n\n")
+    print(object$Descriptive1)
+    cat("\n\n")
+    
+    cat("   	       Descriptive Statistics (The Second Group) \n\n")
+    print(object$Descriptive2)
+    cat("\n\n")
+    
+    cat("  	       Detection important variable(s)\n\n")
+    print(object$CI)
+  }
+  
+  ####### Box-M Test
+  if (!is.null(object$Test) && object$Test == "BoxM") {  
+    
+    cat("       Box's M Test", "\n\n")
+    cat("Chi-Squared Value =", object$Chisq,
+        ", df =", object$df,
+        " and p-value:", format.pval(object$p.value, digits = 3), "\n\n")
+  }
+  
+  ####### Bartlett's Sphericity Test
+  if (!is.null(object$Test) && object$Test == "Bsper") {  
+    
+    cat("       Bartlett's Sphericity Test", "\n\n")
+    cat("Chi-Squared Value =", object$Chisq,
+        ", df =", object$df,
+        " and p-value:", format.pval(object$p.value, digits = 3), "\n\n")
+    cat("       Correlation Matrix", "\n\n")
+    print(object$R)
+  }
+  
+  ####### Bartlett's Test for One Sample Covariance Matrix 
+  if (!is.null(object$Test) && object$Test == "Bcov") {  
+    
+    cat("       Bartlett's Test for One Sample Covariance Matrix", "\n\n")
+    cat("Chi-Squared Value =", object$Chisq,
+        ", df =", object$df,
+        " and p-value:", format.pval(object$p.value, digits = 3), "\n\n")
+  }
+  
+  ####### Multivariate Paired Test 
+  if (!is.null(object$Test) && object$Test == "Mpaired") {  
+    
+    cat("       Multivariate Paired Hotelling T Square Test", "\n\n")
+    cat("Hotelling T Sqaure Statistic =", object$HT2, "\n",
+        "F value =", round(object$F, 3),
+        ", df1 =", object$df[1],
+        ", df2 =", object$df[2],
+        ", p-value:", format.pval(object$p.value, digits = 3), "\n\n")
+    
+    cat("   	       Descriptive Statistics (The First Treatment) \n\n")
+    print(object$Descriptive1)
+    cat("\n\n")
+    
+    cat("   	       Descriptive Statistics (The Second Treatment) \n\n")
+    print(object$Descriptive2)
+    cat("\n\n")
+    
+    cat("   	       Descriptive Statistics (The Differences) \n\n")
+    print(object$Descriptive.Difference)
+    cat("\n\n")
+  }
   
   ####### Weighted MRCD-Based Robust MANOVA Test
-  if (object$Test == "RobHDMANOVA") {
+  if (!is.null(object$Test) && object$Test == "RobHDMANOVA") {
     
-    cat("       Weighted MRCD-Based Robust MANOVA Test","\n\n")
+    cat("       Weighted MRCD-Based Robust MANOVA Test", "\n\n")
     cat("Robust Wilks' Lambda =", object$Lambda, "\n")
     cat("Test Statistic (-log Lambda) =", object$TR, "\n")
     cat("p-value:", format.pval(object$p.value, digits = 3), "\n\n")
@@ -148,9 +159,73 @@ cat("\n\n")
     cat("MRCD alpha =", object$alpha, "\n")
     cat("Tau =", object$tau, "\n")
     cat("Cutoff rule =", object$cutoff, "\n\n")
-    
   }
-
-
+  
+  ####### Cellwise Robust Permutation Hotelling T Square Test
+  if ((!is.null(object$Test) && object$Test == "CellMCDT2") ||
+      (!is.null(object$method) &&
+       object$method == "Cellwise robust permutation Hotelling T^2 test")) {
+    
+    cat("       Cellwise Robust Permutation Hotelling T Square Test", "\n\n")
+    
+    if (!is.null(object$method)) {
+      cat("Method =", object$method, "\n")
+    }
+    
+    cat("Robust Hotelling T Square Statistic =",
+        round(object$statistic, 5), "\n")
+    
+    cat("Permutation p-value:",
+        format.pval(object$p.value, digits = 3), "\n\n")
+    
+    if (!is.null(object$parameter)) {
+      
+      cat("Sample information", "\n")
+      
+      if ("n1" %in% names(object$parameter)) {
+        cat("n1 =", object$parameter["n1"], "\n")
+      }
+      
+      if ("n2" %in% names(object$parameter)) {
+        cat("n2 =", object$parameter["n2"], "\n")
+      }
+      
+      if ("p" %in% names(object$parameter)) {
+        cat("p =", object$parameter["p"], "\n")
+      }
+      
+      if ("B" %in% names(object$parameter)) {
+        cat("Number of permutations =", object$parameter["B"], "\n")
+      }
+      
+      if ("successful.permutations" %in% names(object$parameter)) {
+        cat("Successful permutations =",
+            object$parameter["successful.permutations"], "\n")
+      }
+      
+      cat("\n")
+    }
+    
+    cat("cellMCD settings", "\n")
+    
+    if (!is.null(object$alpha.cellMCD)) {
+      cat("alpha =", object$alpha.cellMCD, "\n")
+    }
+    
+    if (!is.null(object$quant)) {
+      cat("quant =", object$quant, "\n")
+    }
+    
+    if (!is.null(object$crit)) {
+      cat("crit =", object$crit, "\n")
+    }
+    
+    cat("\n")
+    cat("Decision rule:", "\n")
+    cat("Reject H0 if the permutation p-value is less than the chosen significance level.",
+        "\n\n")
+  }
+  
+  invisible(object)
+  
 }  # Finish summary Function
-
