@@ -25,3 +25,18 @@ fit <- RobHDMANOVA(x = X, group = group, N = 999,
                    cutoff = "normal")
 
 summary(fit)
+
+## Cellwise Robust Two-Sample Hotelling T2 Test
+
+The `CellMCDT2()` function performs the cellMCD-based robust permutation Hotelling T2 test for comparing the mean vectors of two independent groups in the presence of cellwise outliers.
+
+```r
+library(MVTests)
+
+set.seed(123)
+X1 <- mvtnorm::rmvnorm(n = 30, mean = rep(0, 5), sigma = diag(5))
+X2 <- mvtnorm::rmvnorm(n = 30, mean = rep(0, 5), sigma = diag(5))
+
+fit <- CellMCDT2(X1 = X1, X2 = X2, B = 199, seed = 123)
+summary(fit)
+```

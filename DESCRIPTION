@@ -1,8 +1,8 @@
 Package: MVTests
 Type: Package
-Date: 2026-04-28
+Date: 2026-05-16
 Title: Multivariate Hypothesis Tests
-Version: 2.3.2
+Version: 2.3.3
 Authors@R: person(given="Hasan", family="Bulut", email="hasan.bulut@omu.edu.tr", role=c("aut","cre"))
 Author: Hasan Bulut [aut, cre]
 Maintainer: Hasan Bulut <hasan.bulut@omu.edu.tr>
@@ -14,7 +14,8 @@ Imports:
     mvtnorm,
     Matrix,
     MASS,
-    rrcov
+    rrcov,
+    cellWise
 Suggests:
     robustbase
 Encoding: UTF-8
