@@ -12,6 +12,9 @@ install.packages("devtools")
 devtools::install_github("hsnbulut/MVTests")
 library(MVTests)
 
+# Examples
+
+
 
 ## Robust High-Dimensional MANOVA Test
 
@@ -25,6 +28,7 @@ fit <- RobHDMANOVA(x = X, group = group, N = 999,
                    cutoff = "normal")
 
 summary(fit)
+```
 
 ## Cellwise Robust Two-Sample Hotelling T2 Test
 
