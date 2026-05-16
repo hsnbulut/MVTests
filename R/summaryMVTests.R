@@ -219,11 +219,7 @@ summary.MVTests <- function(object, ...) {
     if (!is.null(object$crit)) {
       cat("crit =", object$crit, "\n")
     }
-    
-    cat("\n")
-    cat("Decision rule:", "\n")
-    cat("Reject H0 if the permutation p-value is less than the chosen significance level.",
-        "\n\n")
+
   }
   
   invisible(object)
