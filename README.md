@@ -44,3 +44,38 @@ X2 <- mvtnorm::rmvnorm(n = 30, mean = rep(0, 5), sigma = diag(5))
 fit <- CellMCDT2(X1 = X1, X2 = X2, B = 199, seed = 123)
 summary(fit)
 ```
+
+## Cellwise Robust One-Sample Hotelling T2 Test
+
+The `RobCellT2_onesample()` function performs the cellMCD-based robust
+one-sample Hotelling T2 test for testing a multivariate mean vector in the
+presence of cellwise outliers. The constants required for the approximate
+F distribution can be obtained using the `simRobCellT2_onesample()` function.
+
+```r
+library(MVTests)
+
+set.seed(123)
+
+X <- MASS::mvrnorm(
+  n = 50,
+  mu = rep(0, 5),
+  Sigma = diag(5)
+)
+
+const <- simRobCellT2_onesample(
+  n = 50,
+  p = 5,
+  nrep = 3000,
+  seed = 123
+)
+
+fit <- RobCellT2_onesample(
+  data = X,
+  mu0 = rep(0, 5),
+  d = const$d,
+  q = const$q
+)
+
+summary(fit)
+```
