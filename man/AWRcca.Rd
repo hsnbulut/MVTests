@@ -2,63 +2,94 @@
 % Please edit documentation in R/AWRcca.R
 \name{AWRcca}
 \alias{AWRcca}
-\title{Adaptive Wrapped Robust Canonical Correlation Analysis (AWRcca)}
+\title{Adaptive Wrapped Robust Canonical Correlation Analysis}
 \usage{
-AWRcca(X, Y, b = 1.5, c = 4, alpha = 0.975, n_xi = 10000, lambda_cap = 0.5)
+AWRcca(
+  X,
+  Y,
+  b = 1.5,
+  c = 4,
+  alpha = 0.975,
+  q1 = 1.540793,
+  q2 = 0.8622731,
+  max_score_components = 5L,
+  lambda_cap = 1,
+  n_xi = NULL
+)
 }
 \arguments{
-\item{X}{A numeric matrix of dimension \eqn{n \times p}.}
+\item{X}{Numeric \eqn{n \times p} matrix.}
 
-\item{Y}{A numeric matrix of dimension \eqn{n \times q}.}
+\item{Y}{Numeric \eqn{n \times q} matrix with the same number of rows as
+\code{X}.}
 
-\item{b}{Lower wrapping threshold (\eqn{b < c}). Default is 1.5.}
+\item{b}{Lower wrapping threshold. The reference value is 1.5.}
 
-\item{c}{Upper wrapping threshold. Default is 4.}
+\item{c}{Upper wrapping threshold, with \eqn{0<b<c}. The reference value is 4.}
 
-\item{alpha}{Reweighting cutoff probability for chi-square threshold. Default is 0.975.}
+\item{alpha}{Probability used for the chi-squared robust-distance cutoff.
+The reference value is 0.975.}
 
-\item{n_xi}{Monte Carlo sample size for the consistency correction. Default is 10000.}
+\item{q1, q2}{Smooth wrapping constants. Their reference values are 1.540793
+and 0.8622731, respectively.}
 
-\item{lambda_cap}{Upper bound for the shrinkage intensity. Default is 0.5.}
+\item{max_score_components}{Maximum number of canonical score pairs used for
+MCD reweighting. The reference value is 5.}
+
+\item{lambda_cap}{Optional upper bound for each analytical shrinkage
+intensity. The default, 1, leaves the analytical estimate uncapped.}
+
+\item{n_xi}{Deprecated compatibility argument. The consistency factor is now
+evaluated deterministically by numerical integration, so this argument is
+ignored.}
 }
 \value{
-A list with components:
+A list containing:
 \itemize{
-  \item \code{cor}: vector of canonical correlations.
-  \item \code{shrink_used}: shrinkage intensity used in the correlation regularization.
-  \item \code{weights}: 0/1 weights from MCD-based reweighting in score space.
-  \item \code{u1}: first canonical score for \code{X} (initial solution).
-  \item \code{v1}: first canonical score for \code{Y} (initial solution).
+  \item \code{cor}: final canonical correlations.
+  \item \code{a}, \code{b}: final canonical direction matrices.
+  \item \code{weights}: binary score-space observation weights.
+  \item \code{retained}: number of observations with weight one.
+  \item \code{reweighted_final}: whether the second weighted fit was used.
+  \item \code{shrink_initial}, \code{shrink_final}: shrinkage intensities.
+  \item \code{shrink_used}: backward-compatible alias of \code{shrink_final}.
+  \item \code{xi}: deterministic Gaussian consistency factor.
+  \item \code{wrapping}: wrapping constants used by the fit.
+  \item \code{u1}, \code{v1}: first initial canonical score pair.
 }
 }
 \description{
-Implements an adaptive wrapped robust canonical correlation analysis procedure for
-potentially contaminated high-dimensional data. The method applies columnwise robust
-standardization and wrapping to mitigate cellwise outliers, uses a Fisher-consistency
-correction, enforces positive semi-definiteness of the correlation matrix, applies
-Ledoit--Wolf type shrinkage, and performs an MCD-based reweighting in the canonical
-score space to downweight casewise outliers.
+Fits the Adaptive Wrapped Robust Canonical Correlation Analysis (AWRcca)
+estimator. The procedure combines columnwise robust wrapping, analytical
+shrinkage of the joint correlation matrix, and MCD reweighting in a
+low-dimensional canonical score space. The score-space weights enter a second
+shrinkage-regularized CCA fit, which remains well defined when \eqn{p+q>n}.
 }
 \details{
-The wrapping transformation is based on a smooth redescending function
-\eqn{\psi_{b,c}} applied to robust z-scores (median/MAD). The shrinkage intensity is
-estimated in a Ledoit--Wolf spirit and then capped by \code{lambda_cap} to avoid
-overshrinkage.
+Each column is centered by its median, scaled by its Gaussian-consistent MAD,
+and transformed with a smooth redescending wrapping function. The Gaussian
+consistency factor is evaluated deterministically rather than by Monte Carlo.
 
-The function returns (i) canonical correlations, (ii) the shrinkage intensity used,
-(iii) 0/1 reweighting indicators, and (iv) the first canonical score pair computed from
-the initial solution (useful for diagnostic plots).
+An analytical Ledoit--Wolf-type shrinkage estimate regularizes the initial
+joint correlation matrix. Robust distances are then computed from at most
+\code{max_score_components} pairs of initial canonical scores. Binary weights
+obtained from these distances are used to construct a second joint correlation
+matrix, which is again shrinkage regularized before the final canonical
+decomposition. If score-space MCD estimation is unavailable or too few
+observations are retained, the initial regularized solution is returned.
 }
 \examples{
-# Example: correlated blocks via a shared latent factor
 set.seed(123)
-n <- 50; p <- 30; q <- 20
-u <- rnorm(n)
-ax <- rnorm(p); ax <- ax / sqrt(sum(ax^2))
-by <- rnorm(q); by <- by / sqrt(sum(by^2))
-X <- 1.0 * u \%*\% t(ax) + matrix(rnorm(n*p), n, p)
-Y <- 1.0 * u \%*\% t(by) + matrix(rnorm(n*q), n, q)
+n <- 60
+p <- 40
+q <- 50
+latent <- rnorm(n)
+X <- outer(latent, seq(0.80, 0.30, length.out = p)) +
+  matrix(rnorm(n * p), n, p)
+Y <- outer(latent, seq(0.75, 0.25, length.out = q)) +
+  matrix(rnorm(n * q), n, q)
 fit <- AWRcca(X, Y)
 fit$cor[1]
-
+fit$retained
+fit$shrink_final
 }

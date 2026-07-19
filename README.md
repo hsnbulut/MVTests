@@ -14,6 +14,32 @@ library(MVTests)
 
 # Examples
 
+## Adaptive Wrapped Robust Canonical Correlation Analysis
+
+`AWRcca()` combines cellwise wrapping, analytical shrinkage, and MCD
+reweighting in an initial canonical-score space. The binary weights enter a
+second shrinkage-regularized CCA fit, so the estimator can be used when the
+combined dimension is larger than the sample size.
+
+```r
+library(MVTests)
+
+set.seed(123)
+n <- 60
+p <- 40
+q <- 50
+latent <- rnorm(n)
+X <- outer(latent, seq(0.80, 0.30, length.out = p)) +
+  matrix(rnorm(n * p), n, p)
+Y <- outer(latent, seq(0.75, 0.25, length.out = q)) +
+  matrix(rnorm(n * q), n, q)
+
+fit <- AWRcca(X, Y)
+fit$cor[1]
+fit$retained
+fit$shrink_final
+```
+
 
 
 ## Robust High-Dimensional MANOVA Test
