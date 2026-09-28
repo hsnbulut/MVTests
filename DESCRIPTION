@@ -1,8 +1,8 @@
 Package: MVTests
 Type: Package
-Date: 2026-07-19
+Date: 2026-09-28
 Title: Multivariate Hypothesis Tests
-Version: 2.3.4
+Version: 2.3.5
 Authors@R: person(given="Hasan", family="Bulut", email="hasan.bulut@omu.edu.tr", role=c("aut","cre"))
 Author: Hasan Bulut [aut, cre]
 Maintainer: Hasan Bulut <hasan.bulut@omu.edu.tr>
@@ -20,4 +20,4 @@ Suggests:
     robustbase
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.1.0
