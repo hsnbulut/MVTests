@@ -9,7 +9,23 @@
 #' classical sample mean vector and covariance matrix with the cellMCD location
 #' and scatter estimates. The statistic is converted to an approximate F
 #' statistic using the constants \code{d} and \code{q}. These constants can be
-#' obtained by the \code{simRobCellT2_onesample()} function.
+#' obtained by the \code{simRobCellT2_onesample()} function. The scaled-F
+#' distribution is an empirical, moment-matched approximation, not a
+#' theoretically derived exact distribution. The constants must come from a
+#' calibration compatible with the number of complete observations \code{n},
+#' dimension \code{p}, null covariance \code{Sigma}, and all cellMCD settings
+#' used in this test (including arguments passed through \code{...}).
+#' Supply \code{X} and the required \code{mu0} to the calibration function for
+#' a robust covariance estimate from raw X, or supply an explicit Sigma.
+#' Perform complete-case handling before calibration and use those same
+#' observations in this test. Calibration uses default cellMCD settings.
+#' This parametric bootstrap uses the specified null mean, not the observed
+#' fitted location. Its approximation depends on the estimated covariance.
+#'
+#' Since cellMCD is not affine equivariant, calibration can depend on the
+#' covariance structure. Diagonal rescaling or standardization does not remove
+#' dependence on the correlation structure. General whitening changes the
+#' coordinate-wise cell structure and is not recommended as routine preprocessing.
 #'
 #' @param data A numeric matrix or data frame.
 #' @param mu0 The hypothesized mean vector under the null hypothesis.
@@ -42,13 +58,16 @@
 #' if (requireNamespace("MASS", quietly = TRUE) &&
 #'     requireNamespace("cellWise", quietly = TRUE)) {
 #'   set.seed(123)
-#'   X <- MASS::mvrnorm(n = 50, mu = rep(0, 5), Sigma = diag(5))
+#'   mu0 <- c(1, -1)
+#'   Sigma <- matrix(c(2, 0.4, 0.4, 1), 2)
+#'   X <- MASS::mvrnorm(n = 30, mu = mu0, Sigma = Sigma)
 #'
-#'   const <- simRobCellT2_onesample(n = 50, p = 5, nrep = 50, seed = 123)
+#'   set.seed(1)
+#'   const <- simRobCellT2_onesample(X = X, mu0 = mu0, nper = 50)
 #'
 #'   fit <- RobCellT2_onesample(
 #'     data = X,
-#'     mu0 = rep(0, 5),
+#'     mu0 = mu0,
 #'     d = const$d,
 #'     q = const$q
 #'   )

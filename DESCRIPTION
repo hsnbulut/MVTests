@@ -1,23 +1,19 @@
 Package: MVTests
 Type: Package
-Date: 2026-09-28
+Date: 2026-10-13
 Title: Multivariate Hypothesis Tests
-Version: 2.3.5
+Version: 2.3.6
 Authors@R: person(given="Hasan", family="Bulut", email="hasan.bulut@omu.edu.tr", role=c("aut","cre"))
 Author: Hasan Bulut [aut, cre]
 Maintainer: Hasan Bulut <hasan.bulut@omu.edu.tr>
 Description: Multivariate hypothesis tests and confidence intervals...
 License: GPL-2
 Depends: R (>= 4.0)
-Imports:
-    stats,
-    mvtnorm,
-    Matrix,
-    MASS,
-    rrcov,
-    cellWise
-Suggests:
-    robustbase
+Imports: stats, mvtnorm, Matrix, MASS, rrcov, cellWise
+Suggests: robustbase, testthat (>= 3.2.0)
 Encoding: UTF-8
 LazyData: true
 Config/roxygen2/version: 8.1.0
+Config/testthat/edition: 3
+NeedsCompilation: no
+Packaged: 2026-10-13 06:33:48 UTC; hsn
